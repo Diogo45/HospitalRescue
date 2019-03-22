@@ -1,0 +1,13 @@
+<b><size=20>Path</size></b>
+
+Path are currently is just class with List<PathPoint> nodes. It represent actual path agent need to go to be in target destination.
+Important to describe what PathPoint is. Currently PathPoint is abstract class.
+
+
+<b>PathPointMove</b>
+Your generic move point. It have one important thing:
+<i>public readonly MoveState state</i> wich is enum value. it can be MoveState.walk or MoveState.crouch. And it describe with what state agent can reach this point from previos point. So after Agent recieve Path i advice to check if it's first point are crouch or not.
+
+
+<b>PathPointJumpDown</b>
+For jump down. Position of point in this case are:

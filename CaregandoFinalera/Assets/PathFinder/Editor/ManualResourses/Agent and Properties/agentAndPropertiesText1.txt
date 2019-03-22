@@ -1,0 +1,10 @@
+<b><size=20>Agent</size></b>
+
+   K_PathFinder.PathFinderAgent. You can find it in a PathFinder/Components folder. Currently it's do three things:
+1) Hold AgentProperties
+2) Receive your goals and receive result of goals
+3) Serve as sort of wrapper to Path class
+
+<b>Starting</b>
+
+   To start working you should put AgentProperties into PathFinderAgent like that:
