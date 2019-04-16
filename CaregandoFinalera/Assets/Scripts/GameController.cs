@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
     //LIMITATION: this value need to be even. Odd values may generate error
     public float scenarioSizeZ;
     //agent prefab
-    public GameObject agent;
+    public GameObject[] agent;
     private List<GameObject> beds;
     //agent radius
     public float agentRadius;
@@ -168,8 +168,8 @@ public class GameController : MonoBehaviour
             beds.Remove(temp2);
         }
 
-
-        GameObject dependente = Instantiate(agent, new Vector3(pos.x, 0f, pos.z), Quaternion.identity) as GameObject;
+        var choosePrefab = agent[Random.Range(0, agent.Length - 1)];
+        GameObject dependente = Instantiate(choosePrefab, new Vector3(pos.x, 0f, pos.z), Quaternion.identity) as GameObject;
 
         dependente.tag = "Dependente";
         dependente.GetComponent<AgentController>().ConfiguraAltruismo(1.0f, 0.8f + Random.Range(0.0f, 0.2f), 0.0f, 1 + Random.Range(0, 1.3f), true, 40 + Random.Range(0, 70));
@@ -189,6 +189,9 @@ public class GameController : MonoBehaviour
         newGroup.transform.parent = GameObject.Find("Groups").transform;
         newGroup.GetComponent<GroupController>().SetDependente(dependente);
         dependente.GetComponent<AgentController>().group = newGroup.GetComponent<GroupController>();
+
+        
+
         //Oitenta por cento da populacao esta em cadeiras de rodas
         if (Random.Range(1,10) <= FAMILY_PERCENTAGE)
         {
@@ -202,6 +205,12 @@ public class GameController : MonoBehaviour
             dependente.GetComponent<AgentController>().group.GroupType = 2;
             dependente.GetComponent<AgentController>().SetColor(new Color(0f, 0f, 0f));
             dependente.GetComponent<MeshRenderer>().material.color = dependente.GetComponent<AgentController>().GetColor();
+        }
+
+        var renderers = dependente.GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach(var r in renderers)
+        {
+            r.material.color = Color.red;
         }
 
     }
@@ -256,8 +265,8 @@ public class GameController : MonoBehaviour
         //conrado
         if (count_sims >= 0 && count_sims < 10 )
         {
-            QTD_FUNCIONARIOS = 7;
-            QTD_DEPENDENTES = 36;
+            QTD_FUNCIONARIOS = 20;
+            QTD_DEPENDENTES = 40;
             TRAINED_PERCENTAGE = 100;
         }
         /*
@@ -684,7 +693,7 @@ public class GameController : MonoBehaviour
                 int pCollider = 0;
                 for (int j = 0; j < hitColliders.Length; j++)
                 {
-                    if (hitColliders[j].gameObject.tag == "Player")
+                    if (hitColliders[j].gameObject.tag == "Player" || hitColliders[j].gameObject.tag == "Obstacle")
                     {
                         //if we find one, it is enough. Break!
                         pCollider++;
@@ -704,8 +713,8 @@ public class GameController : MonoBehaviour
 
                     if (cont > 0)
                     {
-                        
-                        GameObject newAgent = Instantiate(agent, new Vector3(x, 0f, z), Quaternion.identity) as GameObject;
+                        var choosePrefab = agent[Random.Range(0, agent.Length - 1)];
+                        GameObject newAgent = Instantiate(choosePrefab, new Vector3(x, 0f, z), Quaternion.identity) as GameObject;
                         //change his name
                         newAgent.name = "agent" + i;
                         //random agent color
@@ -1519,7 +1528,8 @@ public class GameController : MonoBehaviour
                             {
                                 if (lineCount <= qntAuxins + 5 + qtdAgentesTotal + qntCells)
                                 {
-                                    GameObject newAgent = Instantiate(agent, new Vector3(System.Convert.ToSingle(entries[4]),
+                                    var choosePrefab = agent[Random.Range(0, agent.Length - 1)];
+                                    GameObject newAgent = Instantiate(choosePrefab, new Vector3(System.Convert.ToSingle(entries[4]),
                                     System.Convert.ToSingle(entries[5]), System.Convert.ToSingle(entries[6])),
                                     Quaternion.identity) as GameObject;
                                     //change his name

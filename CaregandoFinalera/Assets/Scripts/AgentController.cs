@@ -8,6 +8,8 @@ using System.Linq;
 
 public class AgentController : MonoBehaviour
 {
+    private Vector3 lastPos;
+    private Animator anim;
     // A funcao que vai determinar a carga que o agente consegue empurrar pela distancia
     public int FunctionType;
     private bool reset = false;
@@ -101,6 +103,7 @@ public class AgentController : MonoBehaviour
 
     void Start()
     {
+        anim = GetComponent<Animator>();
         terrain = GameObject.Find("Terrain").GetComponent<Terrain>();
         dependentes = GameObject.FindGameObjectsWithTag("Dependente").ToList<GameObject>();
         inicialForce = peso * maxSpeed;
@@ -361,6 +364,7 @@ public class AgentController : MonoBehaviour
                    
                 }
             }
+            
         }
         
         //just to draw the path
@@ -369,7 +373,7 @@ public class AgentController : MonoBehaviour
         {
             Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
         }
-        
+
         /*
         if (this.go.tag == "Dependente" && Vector3.Distance(this.transform.position, go.transform.position) < agentRadius / 1.5)
         {
@@ -412,6 +416,18 @@ public class AgentController : MonoBehaviour
             TesteInjuria();
             */
         //CRUSHING
+
+
+        var currMoveVect = transform.position - lastPos;
+
+        float totalAngleDiff = Vector3.SignedAngle(transform.forward, currMoveVect, Vector3.up);
+
+        transform.Rotate(new Vector3(0, totalAngleDiff * 0.05f, 0), Space.World);
+
+        anim.SetFloat("Speed", (speed.magnitude /1.3f ) * 0.5f );
+
+
+        lastPos = transform.position;
     }
 
     //clear agent´s informations
